@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Buzzword Generator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 48rem;
+        }
+        .input {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            margin-right: 1rem;
+        }
+        .button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #4338ca;
+        }
+        .result {
+            background-color: #f3f4f6;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            font-size: 1.125rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="card">
+        <h1 class="text-3xl font-bold text-center mb-6">Corporate Buzzword Generator</h1>
+        
+        <div class="text-center text-gray-600 mb-6">
+            Generate impressive-sounding corporate phrases that may or may not mean anything!
+        </div>
+        
+        <div class="flex mb-6">
+            <input type="text" 
+                   id="numberInput" 
+                   placeholder="Enter 3 digits (0-9)" 
+                   maxlength="3"
+                   class="input">
+            <button onclick="generateRandom()" class="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+                </svg>
+                Random
+            </button>
+        </div>
+
+        <div id="result" class="result hidden"></div>
+
+        <div class="grid grid-cols-3 gap-4 text-sm mt-6">
+            <div>
+                <div class="font-bold mb-2">Column 1</div>
+                <div id="column1"></div>
+            </div>
+            <div>
+                <div class="font-bold mb-2">Column 2</div>
+                <div id="column2"></div>
+            </div>
+            <div>
+                <div class="font-bold mb-2">Column 3</div>
+                <div id="column3"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const words = {
+            column1: ['Balanced', 'Total', 'Integrated', 'Compatible', 'Synchronized', 
+                     'Optimal', 'Responsive', 'Functional', 'Parallel', 'Systemized'],
+            column2: ['Management', 'Organization', 'Reciprocal', 'Monitored', 'Digital',
+                     'Modular', 'Transitional', 'Incremental', 'Third generation', 'Policy'],
+            column3: ['Contingency', 'Hardware/software', 'Projection', 'Time-frame', 'Concept',
+                     'Programming', 'Mobility', 'Capability', 'Flexibility', 'Options']
+        };
+
+        function generatePhrase(number) {
+            if (number.length !== 3) return '';
+            const digits = number.split('').map(n => parseInt(n));
+            return `${words.column1[digits[0]]} ${words.column2[digits[1]]} ${words.column3[digits[2]]}`;
+        }
+
+        function generateRandom() {
+            const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            document.getElementById('numberInput').value = randomNum;
+            updatePhrase(randomNum);
+        }
+
+        function updatePhrase(value) {
+            const resultDiv = document.getElementById('result');
+            if (value.length === 3) {
+                const phrase = generatePhrase(value);
+                resultDiv.textContent = phrase;
+                resultDiv.classList.remove('hidden');
+            } else {
+                resultDiv.classList.add('hidden');
+            }
+        }
+
+        // Initialize word lists
+        Object.keys(words).forEach(column => {
+            const columnDiv = document.getElementById(column);
+            words[column].forEach((word, i) => {
+                const div = document.createElement('div');
+                div.className = 'text-gray-600';
+                div.textContent = `${i}: ${word}`;
+                columnDiv.appendChild(div);
+            });
+        });
+
+        // Set up input handling
+        const input = document.getElementById('numberInput');
+        input.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
+            e.target.value = value;
+            updatePhrase(value);
+        });
+    </script>
+</body>
+</html>
